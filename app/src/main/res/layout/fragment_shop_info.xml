@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_shop_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toTopOf="@id/tv_shop_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Магнит-Косметик"/>
+
+        <TextView
+            android:id="@+id/tv_shop_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintStart_toStartOf="@id/tv_shop_type"
+            app:layout_constraintEnd_toEndOf="@id/tv_shop_type"
+            app:layout_constraintBottom_toTopOf="@id/tv_shop_address"
+            app:layout_constraintTop_toBottomOf="@id/tv_shop_type"
+            tools:text="Название магазина"/>
+
+        <TextView
+            android:id="@+id/tv_shop_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintStart_toStartOf="@id/tv_shop_name"
+            app:layout_constraintEnd_toEndOf="@id/tv_shop_name"
+            app:layout_constraintBottom_toTopOf="@id/tv_shop_open_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_shop_name"
+            tools:text="Адрес: Какой-то длинный адрес магазина Магнит"/>
+
+        <TextView
+            android:id="@+id/tv_shop_open_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toTopOf="@id/tv_shop_status"
+            app:layout_constraintStart_toStartOf="@id/tv_shop_address"
+            app:layout_constraintEnd_toStartOf="@id/tv_shop_close_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_shop_address"
+            tools:text="Время открытия: 9.00"/>
+
+        <TextView
+            android:id="@+id/tv_shop_close_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toBottomOf="@id/tv_shop_open_time"
+            app:layout_constraintStart_toEndOf="@id/tv_shop_open_time"
+            app:layout_constraintEnd_toEndOf="@id/tv_shop_address"
+            app:layout_constraintTop_toTopOf="@id/tv_shop_open_time"
+            tools:text="Время закрытия: 22.00"/>
+
+        <TextView
+            android:id="@+id/tv_shop_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/btn_promotions"
+            app:layout_constraintStart_toStartOf="@+id/tv_shop_open_time"
+            app:layout_constraintEnd_toEndOf="@id/tv_shop_close_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_shop_open_time"
+            tools:text="Сейчас открыт"/>
+
+        <Button
+            android:id="@+id/btn_promotions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/promotions_header"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintTop_toBottomOf="@+id/tv_shop_status"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_map"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/from_map_header"
+            app:layout_constraintTop_toTopOf="@id/btn_promotions"
+            app:layout_constraintStart_toEndOf="@id/btn_promotions"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/btn_promotions"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
