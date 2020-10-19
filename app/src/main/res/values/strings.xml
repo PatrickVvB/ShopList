@@ -5,5 +5,8 @@
     <string name="from_map_header">На карте</string>
     <string name="api_key">AIzaSyCjhCGz7b7URVhcOIF7u0c7bBhcJQpEmjM</string>
 
+    <string name="open_time">Время открытия:</string>
+    <string name="close_time">Время закрытия:</string>
+
 <!--    SHA1: 68:A8:9C:19:01:53:92:E0:F3:D2:43:A9:A9:E1:3B:FE:06:DE:34:73-->
 </resources>

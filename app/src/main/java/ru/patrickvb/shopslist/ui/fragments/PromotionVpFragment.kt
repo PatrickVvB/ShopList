@@ -1,5 +1,6 @@
 package ru.patrickvb.shopslist.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +17,12 @@ import ru.patrickvb.shopslist.databinding.FragmentVpPromotionsBinding
 import ru.patrickvb.shopslist.models.Promotion
 import ru.patrickvb.shopslist.view_models.PromotionViewModel
 
-class PromotionVpFragment(private val shopId: Int, private val shopImage: String) : BaseFragment() {
+class PromotionVpFragment(private val shopId: Int, private val promotionId: Int) : BaseFragment() {
 
-    lateinit var binding: FragmentVpPromotionsBinding
+    private lateinit var binding: FragmentVpPromotionsBinding
     private lateinit var promotionAdapter: PromotionVpAdapter
     private val vm: PromotionViewModel by activityViewModels()
+    private val promotionFragment = PromotionFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,8 +33,12 @@ class PromotionVpFragment(private val shopId: Int, private val shopImage: String
         observeImage()
         observePromotions()
         vm.getPromotions(shopId)
-        vm.getPromotionImage(shopImage)
         return binding.root
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        promotionFragment.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun observePromotions() {
@@ -43,20 +49,17 @@ class PromotionVpFragment(private val shopId: Int, private val shopImage: String
 
     private fun observeImage() {
         vm.getPromotionImage().observe(viewLifecycleOwner, {
-            it?.let { initAdapter(vm.getPromotionsList().value!!) }
+            //собрать картинку
         })
     }
 
     private fun initAdapter(promotionsList: ArrayList<Promotion>) {
-        if (!vm.getPromotionsList().value.isNullOrEmpty() &&
-            vm.getPromotionImage().value != null) {
-            promotionAdapter = PromotionVpAdapter(childFragmentManager, promotionsList)
-            binding.vpPromotions.apply {
-                adapter = promotionAdapter
-                setCurrentItem(0, true)
-            }
-            //собрать картинку
+        promotionAdapter = PromotionVpAdapter(childFragmentManager, promotionsList)
+        binding.vpPromotions.apply {
+            adapter = promotionAdapter
+            setCurrentItem(promotionId, true)
         }
+        vm.getPromotionImage(promotionsList[promotionId].image)
     }
 
     inner class PromotionVpAdapter(
@@ -69,7 +72,13 @@ class PromotionVpFragment(private val shopId: Int, private val shopImage: String
         }
 
         override fun getItem(position: Int): Fragment {
-            return PromotionVpFragment(position, "asd")
+            return getInstance(shopId, position)
+        }
+    }
+
+    companion object {
+        fun getInstance(shopId: Int, position: Int): PromotionVpFragment {
+            return PromotionVpFragment(shopId, position)
         }
     }
 }

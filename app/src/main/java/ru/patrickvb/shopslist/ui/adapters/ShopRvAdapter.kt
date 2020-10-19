@@ -79,12 +79,13 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
     inner class ShopViewHolder(private val binding: ItemShopBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        private var sdf: SimpleDateFormat = SimpleDateFormat("hh:mm", Locale.ROOT)
-        private val today = format("hh:mm", Date()) as String
+        private var sdf: SimpleDateFormat = SimpleDateFormat("HH:mm", Locale.ROOT)
+        private val today = format("HH:mm", Date()) as String
         private val nowTime: Date = sdf.parse(today)
         private var workTime =""
 
         fun bind(shop: Shop) {
+
             shop.name?.let { binding.tvShopName.text = it }
 
             shop.opening?.let {
