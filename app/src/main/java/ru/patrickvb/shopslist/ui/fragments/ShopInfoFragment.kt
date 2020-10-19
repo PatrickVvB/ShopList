@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import ru.patrickvb.shopslist.R
 import ru.patrickvb.shopslist.base.BaseFragment
 import ru.patrickvb.shopslist.databinding.FragmentShopInfoBinding
+import ru.patrickvb.shopslist.view_models.MapViewModel
 import ru.patrickvb.shopslist.view_models.ShopInfoViewModel
 
 class ShopInfoFragment : BaseFragment() {
@@ -33,7 +35,14 @@ class ShopInfoFragment : BaseFragment() {
         }
 
         binding.btnMap.setOnClickListener {
-            //открытие карты
+            val mvm = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+            vm.getShop().value?.let { mvm.setCurrentShop(it) }
+
+            val fragment = MapFragment().apply {
+                setFromFragment(false)
+                setMapVM(mvm)
+            }
+            addFragment(fragment)
         }
     }
 
@@ -49,7 +58,7 @@ class ShopInfoFragment : BaseFragment() {
         })
     }
 
-    fun setVM(vm: ShopInfoViewModel) {
+    fun setShopInfoVM(vm: ShopInfoViewModel) {
         this.vm = vm
     }
 }

@@ -17,7 +17,7 @@ const val PUBLISHER = "МПМ"
 
 class AppRepositoryImpl @Inject constructor(private val api: API) : AppRepository {
 
-    override suspend fun getDiscountsById(shopId: Int): Response<Promotion> {
+    override suspend fun getDiscountsById(shopId: Int): Response<ArrayList<Promotion>> {
         return api.getDiscountsById(API_VERSION, shopId, PUBLISHER)
     }
 
@@ -26,7 +26,7 @@ class AppRepositoryImpl @Inject constructor(private val api: API) : AppRepositor
     }
 
     override suspend fun getShops(): Response<ArrayList<Shop>> {
-        return api.getShops(API_VERSION, Date())
+        return api.getShops()
     }
 
     override suspend fun getShopType(): Response<ArrayList<ShopType>> {

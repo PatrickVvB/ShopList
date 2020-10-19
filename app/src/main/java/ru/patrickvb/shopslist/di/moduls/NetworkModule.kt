@@ -12,7 +12,7 @@ import ru.patrickvb.shopslist.API
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-const val TIMEOUT = 10
+const val TIMEOUT = 30
 
 @Module
 class NetworkModule {

@@ -8,7 +8,7 @@ import ru.patrickvb.shopslist.models.ShopType
 
 interface AppRepository {
 
-    suspend fun getDiscountsById(shopId: Int): Response<Promotion>
+    suspend fun getDiscountsById(shopId: Int): Response<ArrayList<Promotion>>
 
     suspend fun getDiscountImage(imageName: String): Response<Bitmap>
 

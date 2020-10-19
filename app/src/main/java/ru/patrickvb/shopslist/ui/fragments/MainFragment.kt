@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.patrickvb.shopslist.R
 import ru.patrickvb.shopslist.base.BaseFragment
 import ru.patrickvb.shopslist.databinding.FragmentMainBinding
 import ru.patrickvb.shopslist.ui.adapters.ShopRvAdapter
 import ru.patrickvb.shopslist.view_models.MainViewModel
+import ru.patrickvb.shopslist.view_models.MapViewModel
 
 class MainFragment : BaseFragment() {
 
@@ -26,12 +28,21 @@ class MainFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
-        initAdapter()
         observeShopList()
         vm.getShops()
 
-        binding.fabMap.setOnClickListener {
-            //Открытие карты
+        binding.fabMap.apply {
+            visibility = View.GONE
+            setOnClickListener {
+                val mvm = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+                vm.getShopList().value?.let { mvm.setShopList(it) }
+
+                val fragment = MapFragment().apply {
+                    setFromFragment(true)
+                    setMapVM(mvm)
+                }
+                addFragment(fragment)
+            }
         }
         return binding.root
     }
@@ -51,6 +62,8 @@ class MainFragment : BaseFragment() {
         vm.getShopList().observe(viewLifecycleOwner, {
             it?.let {
                 mainAdapter.setShopList(it)
+                initAdapter()
+                binding.fabMap.visibility = View.VISIBLE
             }
         })
     }

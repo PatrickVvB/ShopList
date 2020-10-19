@@ -8,7 +8,7 @@ data class Shop(
     @SerializedName("type")
     val type: Int,
     @SerializedName("name")
-    val name: String,
+    val name: String?,
     @SerializedName("address")
     val address: String,
     @SerializedName("lng")
@@ -16,7 +16,7 @@ data class Shop(
     @SerializedName("lat")
     val lat: Double,
     @SerializedName("opening")
-    val opening: String,
+    val opening: String?,
     @SerializedName("closing")
-    val closing: String
+    val closing: String?
 )

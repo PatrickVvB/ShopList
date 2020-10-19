@@ -4,6 +4,7 @@ import dagger.Subcomponent
 import ru.patrickvb.shopslist.di.moduls.RepositoryModule
 import ru.patrickvb.shopslist.di.scopes.ViewModelScope
 import ru.patrickvb.shopslist.view_models.MainViewModel
+import ru.patrickvb.shopslist.view_models.PromotionViewModel
 import ru.patrickvb.shopslist.view_models.ShopInfoViewModel
 
 @ViewModelScope
@@ -12,4 +13,5 @@ interface RepositorySubcomponent {
 
     fun injectMainViewModel(vm: MainViewModel)
     fun injectShopInfoViewModel(vm: ShopInfoViewModel)
+    fun injectPromotionViewModel(vm: PromotionViewModel)
 }

@@ -80,11 +80,29 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
         : RecyclerView.ViewHolder(binding.root) {
 
         private var sdf: SimpleDateFormat = SimpleDateFormat("hh:mm", Locale.ROOT)
+        private val today = format("hh:mm", Date()) as String
+        private val nowTime: Date = sdf.parse(today)
+        private var workTime =""
 
         fun bind(shop: Shop) {
-            binding.tvShopName.text = shop.name
+            shop.name?.let { binding.tvShopName.text = it }
 
-            val workTime = "Открыт с ${shop.opening} до ${shop.closing}"
+            shop.opening?.let {
+                workTime = "Открыт с $it до ${shop.closing}"
+
+                binding.tvShopState.apply {
+                    val openTime: Date? = sdf.parse(it)
+                    val closeTime: Date? = sdf.parse(shop.closing)
+                    if (nowTime.after(openTime) && nowTime.before(closeTime)) {
+                        text = "Открыто"
+                        setTextColor(resources.getColor(R.color.colorOpen, null))
+                    } else {
+                        text = "Закрыто"
+                        setTextColor(resources.getColor(R.color.colorClose, null))
+                    }
+                }
+            }
+
             binding.tvShopWorkTime.text = workTime
 
             binding.ivShopCover.setImageResource(
@@ -95,25 +113,11 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
                 }
             )
 
-            binding.tvShopState.apply {
-                val today = format("hh:mm", Date()) as String
-                val openTime: Date = sdf.parse(shop.opening)
-                val closeTime: Date = sdf.parse(shop.closing)
-                val nowTime: Date = sdf.parse(today)
-                if (nowTime.before(closeTime) && nowTime.after(openTime)) {
-                    text = "Открыто"
-                    setTextColor(resources.getColor(R.color.colorOpen, null))
-                } else {
-                    text = "Закрыто"
-                    setTextColor(resources.getColor(R.color.colorClose, null))
-                }
-            }
-
             binding.root.setOnClickListener {
                 val sivm = ViewModelProvider((binding.root.context as MainActivity)).get(ShopInfoViewModel::class.java)
                 val fragment = ShopInfoFragment()
                 sivm.setShop(shop)
-                fragment.setVM(sivm)
+                fragment.setShopInfoVM(sivm)
                 (binding.root.context as MainActivity).addFragment(fragment)
             }
 

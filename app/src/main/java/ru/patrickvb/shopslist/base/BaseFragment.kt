@@ -1,5 +1,6 @@
 package ru.patrickvb.shopslist.base
 
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import ru.patrickvb.shopslist.R
 
@@ -20,5 +21,9 @@ abstract class BaseFragment : Fragment() {
             .beginTransaction()
             .replace(R.id.container, fragment)
             .commit()
+    }
+
+    fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 }
