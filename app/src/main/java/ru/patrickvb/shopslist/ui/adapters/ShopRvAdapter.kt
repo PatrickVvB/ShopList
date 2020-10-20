@@ -55,6 +55,7 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
                 val lat2 = p0.latitude
                 val lng2 = p0.longitude
                 shopList.sortedWith(compareBy { distance(it.lat, it.lng, lat2, lng2)})
+                notifyDataSetChanged()
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {

@@ -21,7 +21,7 @@ class AppRepositoryImpl @Inject constructor(private val api: API) : AppRepositor
         return api.getDiscountsById(API_VERSION, shopId, PUBLISHER)
     }
 
-    override suspend fun getDiscountImage(imageName: String): Response<Bitmap> {
+    override suspend fun getDiscountImage(imageName: String): Response<ByteArray> {
         return api.getDiscountImage(API_VERSION, imageName)
     }
 

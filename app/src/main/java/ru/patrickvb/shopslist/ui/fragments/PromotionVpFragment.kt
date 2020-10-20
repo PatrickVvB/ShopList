@@ -1,6 +1,5 @@
 package ru.patrickvb.shopslist.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.viewpager.widget.PagerAdapter
 import ru.patrickvb.shopslist.R
 import ru.patrickvb.shopslist.base.BaseFragment
 import ru.patrickvb.shopslist.databinding.FragmentVpPromotionsBinding
@@ -33,29 +33,23 @@ class PromotionVpFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        PromotionFragment().onActivityResult(requestCode, resultCode, data)
-    }
-
     private fun initAdapter(list: ArrayList<Promotion>) {
         promotionAdapter = PromotionVpAdapter(childFragmentManager).apply {
             setPromotionsList(list)
         }
-        binding.vpPromotions.apply {
-            adapter = promotionAdapter
-            setCurrentItem(0, true)
-        }
+        binding.vpPromotions.apply { adapter = promotionAdapter }
     }
 
     private fun observePromotions() {
         vm.getPromotionsList().observe(viewLifecycleOwner, {
-            it?.let { initAdapter(it) }
+            it?.let {
+                initAdapter(it)
+            }
         })
     }
 
     inner class PromotionVpAdapter(fm: FragmentManager)
-        : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         private val promotionsList = ArrayList<Promotion>()
 
@@ -64,17 +58,37 @@ class PromotionVpFragment : BaseFragment() {
         }
 
         override fun getItem(position: Int): Fragment {
-            return PromotionFragment().apply { setPosition(position) }
+            return promotionInstance(position + 1)
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
             super.destroyItem(container, position, `object`)
         }
 
+        override fun getItemPosition(`object`: Any): Int {
+            val index = promotionsList.indexOf(`object`)
+
+            return if (index == -1)
+                PagerAdapter.POSITION_NONE
+            else index
+        }
+
         fun setPromotionsList(list: ArrayList<Promotion>) {
             promotionsList.clear()
             promotionsList.addAll(list)
             notifyDataSetChanged()
+        }
+    }
+
+    companion object {
+        const val PROMOTION_FRAGMENT_TAG = "promotionTag"
+
+        fun promotionInstance(position: Int): PromotionFragment {
+            val fragment = PromotionFragment()
+            val bundle = Bundle()
+            bundle.putInt(PROMOTION_FRAGMENT_TAG, position)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 }

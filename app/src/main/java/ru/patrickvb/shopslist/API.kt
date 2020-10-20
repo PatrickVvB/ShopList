@@ -21,7 +21,7 @@ interface API {
     suspend fun getDiscountImage(
         @Header("version") version: String,
         @Path("imageName") imageName: String
-    ): Response<Bitmap>
+    ): Response<ByteArray>
 
     @Headers("version: 4", "If-Modified-Since: Thu Mar 17 2020 08:45:25 GMT+0300 (MSK)")
     @GET("magnit-api/shops")

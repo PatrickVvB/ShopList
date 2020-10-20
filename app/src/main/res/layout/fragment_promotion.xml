@@ -8,7 +8,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/tv_promotion_cover"
+            android:id="@+id/iv_promotion_cover"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -19,50 +19,34 @@
 
         <TextView
             android:id="@+id/tv_start_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            android:textColor="@color/colorBlack"
-            app:layout_constraintStart_toStartOf="@id/tv_promotion_cover"
-            app:layout_constraintEnd_toStartOf="@id/tv_end_date"
-            app:layout_constraintTop_toBottomOf="@id/tv_promotion_cover"
+            style="@style/PromotionTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_promotion_cover"
             tools:text="Старт акции: 09.04"/>
 
         <TextView
             android:id="@+id/tv_end_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:textColor="@color/colorBlack"
-            app:layout_constraintStart_toEndOf="@id/tv_start_date"
-            app:layout_constraintEnd_toEndOf="@id/tv_promotion_cover"
-            app:layout_constraintTop_toTopOf="@id/tv_start_date"
-            app:layout_constraintBottom_toBottomOf="@id/tv_start_date"
+            style="@style/PromotionTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_start_date"
             tools:text="Конец акции: 09.10"/>
 
         <TextView
             android:id="@+id/tv_old_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            android:textColor="@color/colorBlack"
-            app:layout_constraintStart_toStartOf="@id/tv_promotion_cover"
-            app:layout_constraintEnd_toStartOf="@id/rv_new_price"
-            app:layout_constraintTop_toBottomOf="@id/tv_start_date"
+            style="@style/PromotionTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_end_date"
             tools:text="Старая цена: 15999 р."/>
 
         <TextView
             android:id="@+id/rv_new_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:textColor="@color/colorBlack"
-            app:layout_constraintStart_toEndOf="@id/tv_old_price"
-            app:layout_constraintEnd_toEndOf="@id/tv_promotion_cover"
-            app:layout_constraintTop_toTopOf="@id/tv_old_price"
-            app:layout_constraintBottom_toBottomOf="@id/tv_old_price"
+            style="@style/PromotionTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_old_price"
             tools:text="Новая цена: 509 р."/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

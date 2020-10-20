@@ -1,6 +1,8 @@
 package ru.patrickvb.shopslist.ui.fragments
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +11,9 @@ import androidx.fragment.app.activityViewModels
 import ru.patrickvb.shopslist.R
 import ru.patrickvb.shopslist.base.BaseFragment
 import ru.patrickvb.shopslist.databinding.FragmentPromotionBinding
+import ru.patrickvb.shopslist.ui.fragments.PromotionVpFragment.Companion.PROMOTION_FRAGMENT_TAG
 import ru.patrickvb.shopslist.view_models.PromotionViewModel
-
-const val ADAPTER_POSITION = "adapterPosition"
+import java.io.ByteArrayInputStream
 
 class PromotionFragment : BaseFragment() {
 
@@ -26,12 +28,13 @@ class PromotionFragment : BaseFragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_promotion, container, false)
 
-        if (savedInstanceState != null)
-            position = savedInstanceState.get(ADAPTER_POSITION) as Int
+        arguments?.let { position = it.getInt(PROMOTION_FRAGMENT_TAG) }
 
         observeImage()
         observePromotions()
-        vm.getPromotionsList().value?.let { vm.getPromotionImage(it[position].image) }
+        vm.getPromotionsList().value?.let {
+            vm.getPromotionImage(it[position].image)
+        }
         return binding.root
     }
 
@@ -49,17 +52,13 @@ class PromotionFragment : BaseFragment() {
     }
 
     private fun observeImage() {
-        vm.getPromotionImage().observe(viewLifecycleOwner, {
-            //собрать картинку
+        vm.getPromotionImage().observe(viewLifecycleOwner, { bitmap ->
+            bitmap?.let {
+                val decodeString = Base64.decode(it, Base64.NO_WRAP)
+                val inputStream = ByteArrayInputStream(decodeString)
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                binding.ivPromotionCover.setImageBitmap(bitmap)
+            }
         })
-    }
-
-    fun setPosition(position: Int) {
-        this.position = position
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ADAPTER_POSITION, position)
     }
 }

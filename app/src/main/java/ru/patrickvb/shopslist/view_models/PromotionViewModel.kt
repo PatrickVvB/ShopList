@@ -1,6 +1,5 @@
 package ru.patrickvb.shopslist.view_models
 
-import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,7 @@ class PromotionViewModel : BaseViewModel() {
     private val job = Job()
     private val vmScope = CoroutineScope(Dispatchers.Main + job)
     private val promotionsList = MutableLiveData<ArrayList<Promotion>>()
-    private val promotionImage = MutableLiveData<Bitmap>()
+    private val promotionImage = MutableLiveData<ByteArray>()
     private val shopId = MutableLiveData<Int>()
 
     init {
@@ -77,7 +76,7 @@ class PromotionViewModel : BaseViewModel() {
         return promotionsList
     }
 
-    fun getPromotionImage(): MutableLiveData<Bitmap> {
+    fun getPromotionImage(): MutableLiveData<ByteArray> {
         return promotionImage
     }
 
