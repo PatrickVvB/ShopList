@@ -22,22 +22,26 @@ class PromotionViewModel : BaseViewModel() {
     private val vmScope = CoroutineScope(Dispatchers.Main + job)
     private val promotionsList = MutableLiveData<ArrayList<Promotion>>()
     private val promotionImage = MutableLiveData<Bitmap>()
+    private val shopId = MutableLiveData<Int>()
 
     init {
         App.appComponent.plusAppRepository().injectPromotionViewModel(this)
     }
 
-    fun getPromotions(shopId: Int) {
+    fun getPromotions() {
         vmScope.launch {
             try {
                 loadStatus.value = true
-                val response = repository.getDiscountsById(shopId)
 
-                if (response.code() < 400) {
-                    promotionsList.value = response.body()
-                } else {
-                    showToast("Что то пошло не так :(")
-                }
+                shopId.value?.let {
+                    val response = repository.getDiscountsById(it)
+
+                    if (response.code() < 400) {
+                        promotionsList.value = response.body()
+                    } else {
+                        showToast("Что то пошло не так :(")
+                    }
+                } ?: showToast("Магазин не найден")
             } catch (e: Exception) {
                 when(e) {
                     is ConnectException -> showToast("Нет соединения с сервером")
@@ -75,5 +79,13 @@ class PromotionViewModel : BaseViewModel() {
 
     fun getPromotionImage(): MutableLiveData<Bitmap> {
         return promotionImage
+    }
+
+    fun getShopId(): MutableLiveData<Int> {
+        return shopId
+    }
+
+    fun setShopId(id: Int) {
+        return shopId.setValue(id)
     }
 }

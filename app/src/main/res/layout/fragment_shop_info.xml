@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="shop"
-            type="ru.patrickvb.shopslist.models.Shop" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -28,7 +22,6 @@
             android:id="@+id/tv_shop_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{shop.name}"
             android:textSize="22sp"
             android:textColor="@color/colorBlack"
             app:layout_constraintStart_toStartOf="@id/tv_shop_type"
@@ -41,7 +34,6 @@
             android:id="@+id/tv_shop_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{shop.address}"
             android:textColor="@color/colorBlack"
             app:layout_constraintStart_toStartOf="@id/tv_shop_name"
             app:layout_constraintEnd_toEndOf="@id/tv_shop_name"
@@ -54,7 +46,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:text='@{@string/open_time + " " + shop.opening}'
             android:textColor="@color/colorBlack"
             app:layout_constraintBottom_toTopOf="@id/tv_shop_status"
             app:layout_constraintStart_toStartOf="@id/tv_shop_address"
@@ -67,7 +58,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text='@{@string/close_time + " " + shop.closing}'
             android:textColor="@color/colorBlack"
             app:layout_constraintBottom_toBottomOf="@id/tv_shop_open_time"
             app:layout_constraintStart_toEndOf="@id/tv_shop_open_time"

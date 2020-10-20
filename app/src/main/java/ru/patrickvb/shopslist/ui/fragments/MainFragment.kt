@@ -28,19 +28,19 @@ class MainFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        initAdapter()
         observeShopList()
         vm.getShops()
 
         binding.fabMap.apply {
             visibility = View.GONE
             setOnClickListener {
-                val mvm = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-                vm.getShopList().value?.let { mvm.setShopList(it) }
-
-                val fragment = MapFragment().apply {
-                    setFromFragment(true)
-                    setMapVM(mvm)
+                vm.getShopList().value?.let {
+                    ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+                        .setShopList(it)
                 }
+
+                val fragment = MapFragment().apply { setFromFragment(true) }
                 addFragment(fragment)
             }
         }
@@ -61,9 +61,9 @@ class MainFragment : BaseFragment() {
     private fun observeShopList() {
         vm.getShopList().observe(viewLifecycleOwner, {
             it?.let {
-                mainAdapter.setShopList(it)
-                initAdapter()
+                mainAdapter.setShopList(it, requireContext())
                 binding.fabMap.visibility = View.VISIBLE
+                binding.pbMain.visibility = View.GONE
             }
         })
     }

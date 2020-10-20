@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
 import ru.patrickvb.shopslist.R
@@ -17,12 +16,11 @@ import ru.patrickvb.shopslist.databinding.FragmentVpPromotionsBinding
 import ru.patrickvb.shopslist.models.Promotion
 import ru.patrickvb.shopslist.view_models.PromotionViewModel
 
-class PromotionVpFragment(private val shopId: Int, private val promotionId: Int) : BaseFragment() {
+class PromotionVpFragment : BaseFragment() {
 
     private lateinit var binding: FragmentVpPromotionsBinding
     private lateinit var promotionAdapter: PromotionVpAdapter
     private val vm: PromotionViewModel by activityViewModels()
-    private val promotionFragment = PromotionFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,55 +28,53 @@ class PromotionVpFragment(private val shopId: Int, private val promotionId: Int)
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_vp_promotions, container, false)
-        observeImage()
         observePromotions()
-        vm.getPromotions(shopId)
+        vm.getPromotions()
         return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        promotionFragment.onActivityResult(requestCode, resultCode, data)
+        PromotionFragment().onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun initAdapter(list: ArrayList<Promotion>) {
+        promotionAdapter = PromotionVpAdapter(childFragmentManager).apply {
+            setPromotionsList(list)
+        }
+        binding.vpPromotions.apply {
+            adapter = promotionAdapter
+            setCurrentItem(0, true)
+        }
     }
 
     private fun observePromotions() {
-        vm.getPromotionsList().observe(viewLifecycleOwner, { list ->
-            list?.let { initAdapter(it) }
+        vm.getPromotionsList().observe(viewLifecycleOwner, {
+            it?.let { initAdapter(it) }
         })
     }
 
-    private fun observeImage() {
-        vm.getPromotionImage().observe(viewLifecycleOwner, {
-            //собрать картинку
-        })
-    }
+    inner class PromotionVpAdapter(fm: FragmentManager)
+        : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    private fun initAdapter(promotionsList: ArrayList<Promotion>) {
-        promotionAdapter = PromotionVpAdapter(childFragmentManager, promotionsList)
-        binding.vpPromotions.apply {
-            adapter = promotionAdapter
-            setCurrentItem(promotionId, true)
-        }
-        vm.getPromotionImage(promotionsList[promotionId].image)
-    }
-
-    inner class PromotionVpAdapter(
-        fm: FragmentManager,
-        private val promotionsList: ArrayList<Promotion>
-    ) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        private val promotionsList = ArrayList<Promotion>()
 
         override fun getCount(): Int {
             return promotionsList.size
         }
 
         override fun getItem(position: Int): Fragment {
-            return getInstance(shopId, position)
+            return PromotionFragment().apply { setPosition(position) }
         }
-    }
 
-    companion object {
-        fun getInstance(shopId: Int, position: Int): PromotionVpFragment {
-            return PromotionVpFragment(shopId, position)
+        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+            super.destroyItem(container, position, `object`)
+        }
+
+        fun setPromotionsList(list: ArrayList<Promotion>) {
+            promotionsList.clear()
+            promotionsList.addAll(list)
+            notifyDataSetChanged()
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 abstract class BaseViewModel : ViewModel() {
 
     private val toastObserver = MutableLiveData<String>()
-    val loadStatus = MutableLiveData<Boolean>()
+    val loadStatus = MutableLiveData(false)
 
     fun showToast(message: String) {
         toastObserver.value = message

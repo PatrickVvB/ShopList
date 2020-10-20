@@ -1,6 +1,9 @@
 package ru.patrickvb.shopslist.ui.adapters
 
+import android.content.Context
+import android.location.Location
 import android.location.LocationListener
+import android.os.Bundle
 import android.text.format.DateFormat.format
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -40,23 +43,31 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
         return shopList.size
     }
 
-    fun setShopList(shops: ArrayList<Shop>) {
+    fun setShopList(shops: ArrayList<Shop>, context: Context) {
         shopList.apply {
             clear()
             addAll(shops)
         }
+        notifyDataSetChanged()
 
-        locationListener = LocationListener { location ->
-            val lat2 = location.latitude
-            val lng2 = location.longitude
+        locationListener = object : LocationListener {
+            override fun onLocationChanged(p0: Location) {
+                val lat2 = p0.latitude
+                val lng2 = p0.longitude
+                shopList.sortedWith(compareBy { distance(it.lat, it.lng, lat2, lng2)})
+            }
 
-            shopList.sortedWith(compareBy { distance(it.lat, it.lng, lat2, lng2)})
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                //super.onStatusChanged(provider, status, extras) - супер реализация приводит в вылету
+            }
         }
+
+        getLocation(context, locationListener)
     }
 
     private fun distance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Double {
 
-        val earthRadius = 6371.0
+        val earthRadius = 3958.75
 
         val dLat = Math.toRadians(lat2 - lat1)
         val dLng = Math.toRadians(lng2 - lng1)
@@ -71,17 +82,14 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
 
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-        val dist = earthRadius * c
-
-        return dist
+        return earthRadius * c
     }
 
     inner class ShopViewHolder(private val binding: ItemShopBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
         private var sdf: SimpleDateFormat = SimpleDateFormat("HH:mm", Locale.ROOT)
-        private val today = format("HH:mm", Date()) as String
-        private val nowTime: Date = sdf.parse(today)
+        private val nowTime: Date = sdf.parse(format("HH:mm", Date()) as String)
         private var workTime =""
 
         fun bind(shop: Shop) {
@@ -115,14 +123,12 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
             )
 
             binding.root.setOnClickListener {
-                val sivm = ViewModelProvider((binding.root.context as MainActivity)).get(ShopInfoViewModel::class.java)
-                val fragment = ShopInfoFragment()
-                sivm.setShop(shop)
-                fragment.setShopInfoVM(sivm)
-                (binding.root.context as MainActivity).addFragment(fragment)
+                shop.name?.let {
+                    ViewModelProvider((binding.root.context as MainActivity)).get(ShopInfoViewModel::class.java).setShop(shop)
+                    val fragment = ShopInfoFragment()
+                    (binding.root.context as MainActivity).addFragment(fragment)
+                }
             }
-
-            getLocation(binding.root.context, locationListener)
         }
     }
 }

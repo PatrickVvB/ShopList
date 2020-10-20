@@ -13,4 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+<!--    lat45.0241296-->
+<!--    lng38.5855976-->
 </androidx.constraintlayout.widget.ConstraintLayout>

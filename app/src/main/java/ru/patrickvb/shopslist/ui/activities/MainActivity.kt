@@ -10,6 +10,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        replaceFragment(MainFragment())
+        if (savedInstanceState == null)
+            replaceFragment(MainFragment())
     }
 }
