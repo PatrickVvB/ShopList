@@ -30,6 +30,7 @@ class ShopInfoFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_shop_info, container, false)
         observeTypes()
         observeShop()
+        observeToast()
         vm.getAllShopTypes()
         initButtons()
         return binding.root
@@ -67,6 +68,7 @@ class ShopInfoFragment : BaseFragment() {
         })
     }
 
+    //устанавливаем тип магазина
     private fun observeTypes() {
         vm.getShopTypes().observe(viewLifecycleOwner, {types ->
             types?.let {shopTypes ->
@@ -81,6 +83,13 @@ class ShopInfoFragment : BaseFragment() {
         })
     }
 
+    private fun observeToast() {
+        vm.getToast().observe(viewLifecycleOwner, {
+            it?.let { showToast(it) }
+        })
+    }
+
+    //магазин открыт или закрыт
     private fun calculateShopStatus(): Boolean {
         val sdf = SimpleDateFormat("HH:mm", Locale.ROOT)
         val today = DateFormat.format("HH:mm", Date()) as String

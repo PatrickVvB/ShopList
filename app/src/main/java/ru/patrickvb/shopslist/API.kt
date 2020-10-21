@@ -1,12 +1,10 @@
 package ru.patrickvb.shopslist
 
-import android.graphics.Bitmap
 import retrofit2.Response
 import retrofit2.http.*
 import ru.patrickvb.shopslist.models.Promotion
 import ru.patrickvb.shopslist.models.Shop
 import ru.patrickvb.shopslist.models.ShopType
-import java.util.Date
 
 interface API {
 
@@ -21,7 +19,7 @@ interface API {
     suspend fun getDiscountImage(
         @Header("version") version: String,
         @Path("imageName") imageName: String
-    ): Response<ByteArray>
+    ): Response<String>
 
     @Headers("version: 4", "If-Modified-Since: Thu Mar 17 2020 08:45:25 GMT+0300 (MSK)")
     @GET("magnit-api/shops")

@@ -43,6 +43,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
         map.onResume()
     }
 
+    //устанавливаем маркеры
     override fun onMapReady(p0: GoogleMap?) {
         if (isFromMain) {
             vm.getShopList().value?.forEach {shop ->

@@ -29,6 +29,7 @@ class PromotionVpFragment : BaseFragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_vp_promotions, container, false)
         observePromotions()
+        observeToast()
         vm.getPromotions()
         return binding.root
     }
@@ -42,9 +43,13 @@ class PromotionVpFragment : BaseFragment() {
 
     private fun observePromotions() {
         vm.getPromotionsList().observe(viewLifecycleOwner, {
-            it?.let {
-                initAdapter(it)
-            }
+            it?.let { initAdapter(it) }
+        })
+    }
+
+    private fun observeToast() {
+        vm.getToast().observe(viewLifecycleOwner, {
+            it?.let { showToast(it) }
         })
     }
 

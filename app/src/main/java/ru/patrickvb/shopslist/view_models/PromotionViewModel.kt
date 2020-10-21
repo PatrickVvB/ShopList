@@ -20,7 +20,7 @@ class PromotionViewModel : BaseViewModel() {
     private val job = Job()
     private val vmScope = CoroutineScope(Dispatchers.Main + job)
     private val promotionsList = MutableLiveData<ArrayList<Promotion>>()
-    private val promotionImage = MutableLiveData<ByteArray>()
+    private val promotionImage = MutableLiveData<String>()
     private val shopId = MutableLiveData<Int>()
 
     init {
@@ -45,6 +45,7 @@ class PromotionViewModel : BaseViewModel() {
                 when(e) {
                     is ConnectException -> showToast("Нет соединения с сервером")
                     is SocketException -> showToast("Проблемы с соединением")
+                    else -> showToast(e.toString())
                 }
             }
         }
@@ -58,7 +59,8 @@ class PromotionViewModel : BaseViewModel() {
                 val response = repository.getDiscountImage(url)
 
                 if (response.code() < 400) {
-                    promotionImage.value = response.body()
+                    val asd = response.body()
+                    //promotionImage.value = response.body()
                 } else {
                     showToast("Что то пошло не так :(")
                 }
@@ -66,6 +68,7 @@ class PromotionViewModel : BaseViewModel() {
                 when(e) {
                     is ConnectException -> showToast("Нет соединения с сервером")
                     is SocketException -> showToast("Проблемы с соединением")
+                    else -> showToast(e.toString())
                 }
             }
         }
@@ -76,7 +79,7 @@ class PromotionViewModel : BaseViewModel() {
         return promotionsList
     }
 
-    fun getPromotionImage(): MutableLiveData<ByteArray> {
+    fun getPromotionImage(): MutableLiveData<String> {
         return promotionImage
     }
 

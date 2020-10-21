@@ -1,6 +1,5 @@
 package ru.patrickvb.shopslist.ui.fragments
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
 import android.view.LayoutInflater
@@ -8,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.Glide
 import ru.patrickvb.shopslist.R
 import ru.patrickvb.shopslist.base.BaseFragment
 import ru.patrickvb.shopslist.databinding.FragmentPromotionBinding
 import ru.patrickvb.shopslist.ui.fragments.PromotionVpFragment.Companion.PROMOTION_FRAGMENT_TAG
 import ru.patrickvb.shopslist.view_models.PromotionViewModel
-import java.io.ByteArrayInputStream
 
 class PromotionFragment : BaseFragment() {
 
@@ -32,6 +32,7 @@ class PromotionFragment : BaseFragment() {
 
         observeImage()
         observePromotions()
+        observeToast()
         vm.getPromotionsList().value?.let {
             vm.getPromotionImage(it[position].image)
         }
@@ -39,7 +40,7 @@ class PromotionFragment : BaseFragment() {
     }
 
     private fun observePromotions() {
-        vm.getPromotionsList().observe(viewLifecycleOwner, {promotions ->
+        vm.getPromotionsList().observe(viewLifecycleOwner, { promotions ->
             promotions?.let {
                 binding.apply {
                     tvStartDate.text = "Старт акции: ${it[position].startDate}"
@@ -51,14 +52,35 @@ class PromotionFragment : BaseFragment() {
         })
     }
 
+    //устанавливаем картинку
     private fun observeImage() {
         vm.getPromotionImage().observe(viewLifecycleOwner, { bitmap ->
             bitmap?.let {
-                val decodeString = Base64.decode(it, Base64.NO_WRAP)
-                val inputStream = ByteArrayInputStream(decodeString)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                binding.ivPromotionCover.setImageBitmap(bitmap)
+                val circularProgressDrawable = CircularProgressDrawable(
+                    requireContext()
+                ).apply {
+                    strokeWidth = 5f
+                    centerRadius = 48f
+                    start()
+                }
+//                val base64Image = it.split(",")[1]
+//                val decodeString = Base64.decode(base64Image, Base64.DEFAULT)
+//                val image = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.size)
+//                binding.ivPromotionCover.setImageBitmap(image)
+                val imageByteArray = Base64.decode(it, Base64.DEFAULT)
+                Glide
+                    .with(requireContext())
+                    .asBitmap()
+                    .load(imageByteArray)
+                    .placeholder(circularProgressDrawable)
+                    .into(binding.ivPromotionCover)
             }
+        })
+    }
+
+    private fun observeToast() {
+        vm.getToast().observe(viewLifecycleOwner, {
+            it?.let { showToast(it) }
         })
     }
 }

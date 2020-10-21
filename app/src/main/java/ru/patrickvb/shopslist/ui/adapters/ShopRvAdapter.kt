@@ -14,13 +14,13 @@ import ru.patrickvb.shopslist.R
 import ru.patrickvb.shopslist.databinding.ItemShopBinding
 import ru.patrickvb.shopslist.getLocation
 import ru.patrickvb.shopslist.models.Shop
+import ru.patrickvb.shopslist.models.SortShops
 import ru.patrickvb.shopslist.ui.activities.MainActivity
 import ru.patrickvb.shopslist.ui.fragments.ShopInfoFragment
 import ru.patrickvb.shopslist.view_models.ShopInfoViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.*
 
 class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
 
@@ -44,17 +44,15 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
     }
 
     fun setShopList(shops: ArrayList<Shop>, context: Context) {
-        shopList.apply {
-            clear()
-            addAll(shops)
-        }
-        notifyDataSetChanged()
-
         locationListener = object : LocationListener {
             override fun onLocationChanged(p0: Location) {
-                val lat2 = p0.latitude
-                val lng2 = p0.longitude
-                shopList.sortedWith(compareBy { distance(it.lat, it.lng, lat2, lng2)})
+
+                Collections.sort(shops, SortShops(p0.latitude, p0.longitude))
+
+                shopList.apply {
+                    clear()
+                    addAll(shops)
+                }
                 notifyDataSetChanged()
             }
 
@@ -64,26 +62,6 @@ class ShopRvAdapter : RecyclerView.Adapter<ShopRvAdapter.ShopViewHolder>() {
         }
 
         getLocation(context, locationListener)
-    }
-
-    private fun distance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Double {
-
-        val earthRadius = 3958.75
-
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLng = Math.toRadians(lng2 - lng1)
-
-        val sindLat = sin(dLat / 2)
-        val sindLng = sin(dLng / 2)
-
-        val a = sindLat.pow(2) +
-                sindLng.pow(2) *
-                cos(Math.toRadians(lat1)) *
-                cos(Math.toRadians(lat2))
-
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return earthRadius * c
     }
 
     inner class ShopViewHolder(private val binding: ItemShopBinding)

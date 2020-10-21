@@ -28,8 +28,8 @@ class MainFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
-        initAdapter()
         observeShopList()
+        observeToast()
         vm.getShops()
 
         binding.fabMap.apply {
@@ -44,6 +44,7 @@ class MainFragment : BaseFragment() {
                 addFragment(fragment)
             }
         }
+        initAdapter()
         return binding.root
     }
 
@@ -65,6 +66,12 @@ class MainFragment : BaseFragment() {
                 binding.fabMap.visibility = View.VISIBLE
                 binding.pbMain.visibility = View.GONE
             }
+        })
+    }
+
+    private fun observeToast() {
+        vm.getToast().observe(viewLifecycleOwner, {
+            it?.let { showToast(it) }
         })
     }
 }

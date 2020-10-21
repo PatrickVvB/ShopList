@@ -40,6 +40,7 @@ class MainViewModel : BaseViewModel() {
                 when(e) {
                     is ConnectException -> showToast("Нет соединения с сервером")
                     is SocketException -> showToast("Проблемы с соединением")
+                    else -> showToast(e.toString())
                 }
             }
         }

@@ -9,7 +9,7 @@ interface AppRepository {
 
     suspend fun getDiscountsById(shopId: Int): Response<ArrayList<Promotion>>
 
-    suspend fun getDiscountImage(imageName: String): Response<ByteArray>
+    suspend fun getDiscountImage(imageName: String): Response<String>
 
     suspend fun getShops(): Response<ArrayList<Shop>>
 
