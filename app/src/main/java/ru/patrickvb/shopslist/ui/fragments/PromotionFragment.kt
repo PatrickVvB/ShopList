@@ -63,15 +63,10 @@ class PromotionFragment : BaseFragment() {
                     centerRadius = 48f
                     start()
                 }
-//                val base64Image = it.split(",")[1]
-//                val decodeString = Base64.decode(base64Image, Base64.DEFAULT)
-//                val image = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.size)
-//                binding.ivPromotionCover.setImageBitmap(image)
-                val imageByteArray = Base64.decode(it, Base64.DEFAULT)
+
                 Glide
                     .with(requireContext())
-                    .asBitmap()
-                    .load(imageByteArray)
+                    .load(it)
                     .placeholder(circularProgressDrawable)
                     .into(binding.ivPromotionCover)
             }

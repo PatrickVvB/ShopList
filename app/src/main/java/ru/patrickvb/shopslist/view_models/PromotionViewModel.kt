@@ -9,6 +9,7 @@ import ru.patrickvb.shopslist.base.BaseViewModel
 import ru.patrickvb.shopslist.di.App
 import ru.patrickvb.shopslist.models.Promotion
 import ru.patrickvb.shopslist.repository.AppRepository
+import ru.patrickvb.shopslist.repository.ImageRepository
 import java.net.ConnectException
 import java.net.SocketException
 import javax.inject.Inject
@@ -17,6 +18,8 @@ class PromotionViewModel : BaseViewModel() {
 
     @Inject
     lateinit var repository: AppRepository
+    @Inject
+    lateinit var imageRepository: ImageRepository
     private val job = Job()
     private val vmScope = CoroutineScope(Dispatchers.Main + job)
     private val promotionsList = MutableLiveData<ArrayList<Promotion>>()
@@ -56,11 +59,10 @@ class PromotionViewModel : BaseViewModel() {
         vmScope.launch {
             try {
                 loadStatus.value = true
-                val response = repository.getDiscountImage(url)
+                val response = imageRepository.getDiscountImage(url)
 
                 if (response.code() < 400) {
-                    val asd = response.body()
-                    //promotionImage.value = response.body()
+                    promotionImage.value = response.body()
                 } else {
                     showToast("Что то пошло не так :(")
                 }
@@ -81,10 +83,6 @@ class PromotionViewModel : BaseViewModel() {
 
     fun getPromotionImage(): MutableLiveData<String> {
         return promotionImage
-    }
-
-    fun getShopId(): MutableLiveData<Int> {
-        return shopId
     }
 
     fun setShopId(id: Int) {
